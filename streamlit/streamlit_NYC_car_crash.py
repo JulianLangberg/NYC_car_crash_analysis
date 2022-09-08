@@ -12,6 +12,11 @@ from scipy.signal import savgol_filter
 import pydeck as pdk
 
 import matplotlib.pyplot as plt
+
+## Carga DF
+from conection_databricks import tabla
+
+
 header1 = st.container()
 #dataset = st.container()
 mod1 = st.container()
@@ -20,15 +25,15 @@ mod1 = st.container()
 # Empezamos con CSV.
 #@st.cache(allow_output_mutation=True)
 #def load_data():
-file = '/content/drive/MyDrive/Colab Notebooks/Motor_Vehicle_Collisions-Crashes1.csv'
+#file = '/content/drive/MyDrive/Colab Notebooks/Motor_Vehicle_Collisions-Crashes1.csv'
 #file = 'Motor_Vehicle_Collisions-Crashes1.csv'
-df3 = pd.read_csv(file)
+#df3 = pd.read_csv(file)
 #  return df3
-
-
+df3 = tabla(gold,df_definitivo)
+df_semana_siniestros = tabla(gold,df_semana_siniestros)
 #df3 = load_data()
 
-df_p = df3
+df_definitivo = df3
 df = df3
 ## cargar df_definitivo
 ## df_season_siniestros
@@ -153,7 +158,7 @@ st.markdown("Al profundizar en estos valores por temporada, observamos que los p
 
 #### ETL PARA GRAFICO DE TEMPORADASS
 
-#df_season_siniestros= df_definitivo.groupby('season')[['number_of_crashes']].sum().reset_index()
+df_season_siniestros= df_definitivo.groupby('season')[['number_of_crashes']].sum().reset_index()
 
 
 fig = px.bar(df_season_siniestros, x="season", y=["number_of_crashes"], title="Siniestros por temporada")
@@ -193,7 +198,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 ######### abierto por covid
 
-df_week_lockdown=df_definitivo[['lockdown','week_day','number_of_crashes']]
+#df_week_lockdown=df_definitivo[['lockdown','week_day','number_of_crashes']]
 
 
 #df_week_lockdown.groupby(['lockdown','week_day']).mean().unstack('week_day').plot.bar(figsize=(20,5),color=(0.2, 0.2, 0.2, 0.2),edgecolor='grey')
@@ -220,20 +225,6 @@ st.markdown("El cambio de comportamiento de los conductores se observa también 
 image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Evolucion_season_covid.png')
 st.image(image)
 
-'''
-df_week_lockdown=df_definitivo[['lockdown','week_day','number_of_crashes']]
-
-df_week_lockdown.groupby(['lockdown','week_day']).mean().unstack('week_day').plot.bar(figsize=(20,5),color=(0, 0.2, 0.8, 0.4),edgecolor='grey')
-
-
-
-
-
-ec = ['blue', 'green', 'orange', 'grey']
-
-#fig = df_season_lockdown.groupby(['season','lockdown']).mean().unstack('season').plot.bar(figsize=(10,4),color=ec)
-#st.plotly_chart(fig, use_container_width=False, sharing="streamlit")
-'''
 
 ##### ETL PARA CALCULADO KPI's
 ####Si el archivo es el descargado como csv, se debe hacer esto, sino comenta el codigo el cambio a datetime
