@@ -31,6 +31,7 @@ mod1 = st.container()
 #file = 'Motor_Vehicle_Collisions-Crashes1.csv'
 #df3 = pd.read_csv(file)
 #  return df3
+
 df3 = tabla(gold,df_definitivo)
 df_semana_siniestros = tabla(gold,df_semana_siniestros)
 df_motivos_grouped_aux_pre = tabla(gold,df_motivos_grouped_aux_pre)
@@ -443,6 +444,7 @@ st.image(image)
 
 st.subheader( '- La pandemia tuvo como resultado colateral una significativa caída en los accidentes de tránsito. La caída post-Lockdown es generada por menos personas movilizándose, tanto los días de semana como los sábados y domingos.')
 st.subheader( '- Aunque se observaba mayor siniestralidad en verano, y los días viernes, esto ya no se observa en la actualidad. El manejo "DUI" no es de los principales causantes de accidentes. Sin embargo, identificamos a las distracciones (no determinadas) como uno de los principales motivos de colisiones entre vehículos.')
+st.subheader( '- El control en el "Exceso de velocidad", ')
 st.subheader( '- El impacto económico por la siniestralidad vial toma valores multimillonarios y afecta a cientos de personas cada año. La posibilidad de visualizar las esquinas con mayor cantidad de accidentes permite identificar áreas de mayor riesgo para destinar políticas públicas de mayor impacto.')
 st.subheader( '- Identificamos áreas de interés, por ejemplo la esquina de Vanderbilt Ave y Bay St. donde se encuentra uno de los principales hospitales de Long Island, junto a una escuela y un edificio del Servicio Postal o los alrededores de Bedfort Ave y Lincoln Rd. en Brooklyn, junto a uno de los principales hospitales de emergencias, el Kings County Hospital')
 st.subheader( '- Finalmente, al analizar otra linea de investigación relacionada a fechas de eventos deportivos,  nos lleva a proponer mayores controles en los alredores del Estadio de los "NY Yankees" (Bronx), al observarse un aumento en el promedio de accidentes durante esos días.')
