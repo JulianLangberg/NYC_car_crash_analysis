@@ -32,8 +32,8 @@ mod1 = st.container()
 #df3 = pd.read_csv(file)
 #  return df3
 
-df3 = tabla('gold','df_definitivo')
-df_semana_siniestros = tabla('gold','df_semana_siniestros')
+df3 = tabla('gold','general_graph')
+df_semana_siniestros = tabla('gold','day_of_week')
 df_motivos_grouped_aux_pre = tabla('gold','df_motivos_grouped_aux_pre')
 df_motivos_grouped_aux_post =  tabla('gold','df_motivos_grouped_aux_post')
 df_motivos_grouped_aux_post_viernes = tabla('gold','df_motivos_grouped_aux_post_viernes')
