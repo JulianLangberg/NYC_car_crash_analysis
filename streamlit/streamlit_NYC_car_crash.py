@@ -12,6 +12,8 @@ from scipy.signal import savgol_filter
 import pydeck as pdk
 
 import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 ## Carga DF
 from conection_databricks import tabla
@@ -31,9 +33,13 @@ mod1 = st.container()
 #  return df3
 df3 = tabla(gold,df_definitivo)
 df_semana_siniestros = tabla(gold,df_semana_siniestros)
+df_motivos_grouped_aux_pre = tabla(gold,df_motivos_grouped_aux_pre)
+df_motivos_grouped_aux_post =  tabla(gold,df_motivos_grouped_aux_post)
+df_motivos_grouped_aux_post_viernes = tabla(gold,df_motivos_grouped_aux_post_viernes)
+df_motivos_grouped_post_winter = tabla(gold,df_motivos_grouped_post_winter)
 #df3 = load_data()
 
-df_definitivo = df3
+df_definitivo = df3.to_pandas()
 df = df3
 ## cargar df_definitivo
 ## df_season_siniestros
@@ -220,11 +226,64 @@ st.markdown("La cantidad de accidentes tanto los días de semana, como los sába
 image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Evolucion_semanal_covid.png')
 st.image(image)
 
+
+st.markdown("El orden de los principales factores que contribuyen a los accidentes no tuvieron cambios significativos .")
+
+fig = make_subplots(rows=1, cols=2, shared_yaxes=False)
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_pre["number_of_crashes"],
+                     y=df_motivos_grouped_aux_pre["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Pre"),
+              1, 1)
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_post["number_of_crashes"], y=df_motivos_grouped_aux_post["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Post"),
+              1, 2)
+
+fig.update_layout(height=600, width=1000, title_text="Factores contributivos - Cant. Accidentes Pre y Post-Lockdown")
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("Sin embargo, los factores causantes de accidentes que involucraron muertos, sí muestran un cambio de comportamiento.")
+
+
+fig = make_subplots(rows=1, cols=2, shared_yaxes=False)
+
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_pre["number_of_persons_killed"],
+                     y=df_motivos_grouped_aux_pre["contributing_factor_vehicle"],orientation = 'h',name="Muertes - Pre"),
+              1, 1)
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_post["number_of_persons_killed"], y=df_motivos_grouped_aux_post["contributing_factor_vehicle"],orientation = 'h',name="Muertes - Post"),
+              1, 2)
+
+fig.update_layout(height=600, width=1000, title_text="Factores contributivos - Muertes Pre y Post-Lockdown")
+st.plotly_chart(fig, use_container_width=True)
+
+############ lockdown vs lockdown-viernes
+
+st.markdown("Haciendo foco en los viernes, podemos ver que el comportamiento es similar al resto de los días de la semana, los mayores accidentes problamente surgen de una mayor circulación.")
+
+fig = make_subplots(rows=1, cols=2, shared_yaxes=True)
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_post["number_of_crashes"],
+                     y=df_motivos_grouped_aux_post["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Post"),
+              1, 1)
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_post_viernes["number_of_crashes"], y=df_motivos_grouped_aux_post_viernes["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Post - Viernes"),
+              1, 2)
+fig.update_layout(height=600, width=1000, title_text="Factores contributivos - Cant. Accidentes Post-Lockdown y Post-Lockdown viernes")
+fig.show()
+
 st.markdown("El cambio de comportamiento de los conductores se observa también observando las diferentes temporadas del año.")
 
 image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Evolucion_season_covid.png')
 st.image(image)
+############ lockdown vs lockdown-invierno
 
+st.markdown("El cambio de comportamiento de los conductores se observa también observando las diferentes temporadas del año.")
+
+fig = make_subplots(rows=1, cols=2, shared_yaxes=True)
+
+fig.add_trace(go.Bar(x=df_motivos_grouped_aux_post["number_of_crashes"],
+                     y=df_motivos_grouped_aux_post["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Post"),
+              1, 1)
+fig.add_trace(go.Bar(x=df_motivos_grouped_post_winter["number_of_crashes"], y=df_motivos_grouped_post_winter["contributing_factor_vehicle"],orientation = 'h',name="Accidentes - Post - Invierno"),
+              1, 2)
+
+fig.update_layout(height=600, width=1000, title_text="Factores contributivos - Cant. Accidentes Post-Lockdown y Post-Lockdown  Invierno")
+fig.show()
 
 ##### ETL PARA CALCULADO KPI's
 ####Si el archivo es el descargado como csv, se debe hacer esto, sino comenta el codigo el cambio a datetime
