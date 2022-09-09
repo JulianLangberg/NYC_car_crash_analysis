@@ -41,16 +41,16 @@ def load_data():
     df_motivos_grouped_aux_post_viernes = tabla('gold','df_motivos_grouped_aux_post_viernes')
     df_motivos_grouped_post_winter = tabla('gold','df_motivos_grouped_post_winter')
     #df = df3
-    return df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter, df_definitivo
+    return df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter
 
-df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter, df_definitivo = load_data()
-## cargar df_definitivo 
+df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter = load_data()
+## cargar df3 sdfsdf
 
 ###########  VISUAL, PRESENTACION EQUIPO
 
 with header1:
     st.title("Siniestralidad vial en NYC: análisis descriptivo y su impacto en la economía")
-    image = Image.open('/images/portada_nyc_car_crash.jpg')
+    image = Image.open('portada_nyc_car_crash.jpg')
 
     st.image(image, caption='NYC - Car crash') 
 
@@ -69,15 +69,15 @@ with mod1:
 
 
 
-#### Grafico evolutivo
+#### Grafico evolutivo  
 
-fig = px.line(df_definitivo, x = df_definitivo['crash_date'],
-                y=df_definitivo['siniestros_media_movil'], 
+fig = px.line(df3, x = df3['crash_date'],
+                y=df3['siniestros_media_movil'], 
                 title='Evolución siniestros NYC', width=800, height=550,
                 labels= {'crash_date':'Fechas','value':'Cantidad'})
 
 fig.add_trace(
-    go.Scatter(x=list(df_definitivo.crash_date), y=list(df_definitivo['siniestros_media_movil'])
+    go.Scatter(x=list(df3.crash_date), y=list(df3['siniestros_media_movil'])
                 , name='Cantidad de siniestros_media_móvil'))
 # Add range slider
 fig.update_layout(
@@ -116,13 +116,13 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("Haciendo foco en la cantidad de heridos, podemos encontrar un patrón de máximos y mínimos")
 
-fig = px.line(df_definitivo,x = df_definitivo['crash_date'],
+fig = px.line(df3,x = df3['crash_date'],
                 y=['Lastimados_media_movil','Muertos_media_movil'], 
                 title='Evolución siniestros NYC', width=800, height=550,
                 labels= {'crash_date':'Fechas','value':'Cantidad'})
 
 fig.add_trace(
-    go.Scatter(x=list(df_definitivo.crash_date), y=list(df_definitivo['Lastimados_media_movil'])
+    go.Scatter(x=list(df3.crash_date), y=list(df3['Lastimados_media_movil'])
                 , name='Cantidad de personas lastimadas'))
 # Add range slider
 fig.update_layout(
@@ -163,7 +163,7 @@ st.markdown("Al profundizar en estos valores por temporada, observamos que los p
 
 #### ETL PARA GRAFICO DE TEMPORADASS
 
-df_season_siniestros= df_definitivo.groupby('season')[['number_of_crashes']].sum().reset_index()
+df_season_siniestros= df3.groupby('season')[['number_of_crashes']].sum().reset_index()
 
 
 fig = px.bar(df_season_siniestros, x="season", y=["number_of_crashes"], title="Siniestros por temporada")
@@ -174,7 +174,7 @@ st.plotly_chart(fig, use_container_width=True)
 ################
 #### ETL PARA GRAFICO DE COVID
 
-#df_season_lockdown=df_definitivo[['lockdown','season','number_of_crashes']]
+#df_season_lockdown=df3[['lockdown','season','number_of_crashes']]
 
 #ec = ['blue', 'green', 'orange', 'grey']
 
@@ -191,9 +191,9 @@ st.markdown("De similar forma, se observa que los días viernes también existí
 
 #### ETL PARA GRAFICO DE DIAS DE SEMANA
 
-#df_definitivo['week_day']=pd.to_datetime(df_definitivo['crash_date']).dt.dayofweek
+#df3['week_day']=pd.to_datetime(df3['crash_date']).dt.dayofweek
 
-#df_semana_siniestros= df_definitivo.groupby('week_day')[['number_of_crashes']].sum().reset_index()
+#df_semana_siniestros= df3.groupby('week_day')[['number_of_crashes']].sum().reset_index()
 
 #df_semana_siniestros['week_day'].replace([0,1,2,3,4,5,6],['lunes','martes','miércoles','jueves','viernes','sábado','domingo'],inplace=True)
 
@@ -203,7 +203,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 ######### abierto por covid
 
-#df_week_lockdown=df_definitivo[['lockdown','week_day','number_of_crashes']]
+#df_week_lockdown=df3[['lockdown','week_day','number_of_crashes']]
 
 
 #df_week_lockdown.groupby(['lockdown','week_day']).mean().unstack('week_day').plot.bar(figsize=(20,5),color=(0.2, 0.2, 0.2, 0.2),edgecolor='grey')
@@ -212,7 +212,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.title("Deep-dive en un mundo post-pandémico")
 
 
-image = Image.open('/images/empty_city_caratula.jpg')
+image = Image.open('empty_city_caratula.jpg')
 st.image(image, caption='Times Square durante la pandemia.') 
  
 
@@ -222,7 +222,7 @@ st.image(image, caption='Times Square durante la pandemia.')
 ### Gráfico semana
 st.markdown("La cantidad de accidentes tanto los días de semana, como los sábados y domingos se redujeron un 50% vs. los períodos pre-pandémicos.")
 
-image = Image.open('/images/Evolucion_semanal_covid.png')
+image = Image.open('Evolucion_semanal_covid.png')
 st.image(image)
 
 
@@ -267,7 +267,7 @@ fig.show()
 
 st.markdown("El cambio de comportamiento de los conductores se observa también observando las diferentes temporadas del año.")
 
-image = Image.open('/images/Evolucion_season_covid.png')
+image = Image.open('Evolucion_season_covid.png')
 st.image(image)
 ############ lockdown vs lockdown-invierno
 
@@ -301,7 +301,7 @@ df3 = df3.sort_values('crash_date',ascending=True)
 
 # dashboard title
 st.title("Real-Time Data Science Dashboard")
-image3 = Image.open('/images/Data-Science-1.jpg')
+image3 = Image.open('Data-Science-1.jpg')
 st.image(image3, caption='')
 
 st.title("¿Cómo generar políticas públicas data-driven para reducir la siniestralidad en este nuevo contexto? ")
@@ -362,7 +362,7 @@ if calculo:
     
     
     st.metric("Accidentes menos por dia", value=round((accidentes*porcentaje/100)/dias,2), delta= f'-{porcentaje}%' )
-image = Image.open('/images/Conclusiones_NYC.png')
+image = Image.open('Conclusiones_NYC.png')
 
 
 
@@ -435,7 +435,7 @@ r = pdk.Deck(
 
 st.pydeck_chart(r)
 
-image = Image.open('/images/Conclusiones_NYC.png')
+image = Image.open('Conclusiones_NYC.png')
 st.image(image) 
 
 st.subheader( '- La pandemia tuvo como resultado colateral una significativa caída en los accidentes de tránsito. La caída post-Lockdown es generada por menos personas movilizándose, tanto los días de semana como los sábados y domingos.')
