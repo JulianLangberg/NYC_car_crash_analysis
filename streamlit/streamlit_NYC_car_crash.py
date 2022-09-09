@@ -31,27 +31,26 @@ mod1 = st.container()
 #file = 'Motor_Vehicle_Collisions-Crashes1.csv'
 #df3 = pd.read_csv(file)
 #  return df3
-df3 = tabla(gold,df_definitivo)
-df_semana_siniestros = tabla(gold,df_semana_siniestros)
-df_motivos_grouped_aux_pre = tabla(gold,df_motivos_grouped_aux_pre)
-df_motivos_grouped_aux_post =  tabla(gold,df_motivos_grouped_aux_post)
-df_motivos_grouped_aux_post_viernes = tabla(gold,df_motivos_grouped_aux_post_viernes)
-df_motivos_grouped_post_winter = tabla(gold,df_motivos_grouped_post_winter)
-#df3 = load_data()
 
-df_definitivo = df3.to_pandas()
-df = df3
-## cargar df_definitivo
-## df_season_siniestros
-## df_season_lockdown
-## df_semana_siniestros
-## df_week_lockdown
+@st.cache
+def load_data():
+    df3 = tabla('gold','general_graph')
+    df_semana_siniestros = tabla('gold','day_of_week')
+    df_motivos_grouped_aux_pre = tabla('gold','df_motivos_grouped_aux_pre')
+    df_motivos_grouped_aux_post =  tabla('gold','df_motivos_grouped_aux_post')
+    df_motivos_grouped_aux_post_viernes = tabla('gold','df_motivos_grouped_aux_post_viernes')
+    df_motivos_grouped_post_winter = tabla('gold','df_motivos_grouped_post_winter')
+    #df = df3
+    return df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter, df_definitivo
+
+df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter, df_definitivo = load_data()
+## cargar df_definitivo 
 
 ###########  VISUAL, PRESENTACION EQUIPO
 
 with header1:
     st.title("Siniestralidad vial en NYC: análisis descriptivo y su impacto en la economía")
-    image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/portada_nyc_car_crash.jpg')
+    image = Image.open('/images/portada_nyc_car_crash.jpg')
 
     st.image(image, caption='NYC - Car crash') 
 
@@ -213,7 +212,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.title("Deep-dive en un mundo post-pandémico")
 
 
-image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/empty_city_caratula.jpg')
+image = Image.open('/images/empty_city_caratula.jpg')
 st.image(image, caption='Times Square durante la pandemia.') 
  
 
@@ -223,7 +222,7 @@ st.image(image, caption='Times Square durante la pandemia.')
 ### Gráfico semana
 st.markdown("La cantidad de accidentes tanto los días de semana, como los sábados y domingos se redujeron un 50% vs. los períodos pre-pandémicos.")
 
-image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Evolucion_semanal_covid.png')
+image = Image.open('/images/Evolucion_semanal_covid.png')
 st.image(image)
 
 
@@ -268,7 +267,7 @@ fig.show()
 
 st.markdown("El cambio de comportamiento de los conductores se observa también observando las diferentes temporadas del año.")
 
-image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Evolucion_season_covid.png')
+image = Image.open('/images/Evolucion_season_covid.png')
 st.image(image)
 ############ lockdown vs lockdown-invierno
 
@@ -287,16 +286,14 @@ fig.show()
 
 ##### ETL PARA CALCULADO KPI's
 ####Si el archivo es el descargado como csv, se debe hacer esto, sino comenta el codigo el cambio a datetime
-data = df3
 
-
-data.columns = map(str.lower, data.columns) #cambiar nombres de las columnas por minusculas
-d2=data.columns.str.replace(' ', '_')#reemplazar espacios por guion bajo, es un index type
+df3.columns = map(str.lower, df3.columns) #cambiar nombres de las columnas por minusculas
+d2=df3.columns.str.replace(' ', '_')#reemplazar espacios por guion bajo, es un index type
 d2=d2.to_list()
-data.columns=d2 #cambiar por valores de la lista
+df3.columns=d2 #cambiar por valores de la lista
 #
-data['crash_date']=pd.to_datetime(data['crash_date'])
-data = data.sort_values('crash_date',ascending=True)
+df3['crash_date']=pd.to_datetime(df3['crash_date'])
+df3 = df3.sort_values('crash_date',ascending=True)
 
 ################DASHBOARD#############################
 #Esto solo es por joder, se ve lindi si le hacemos click en la seccion de menu
@@ -304,7 +301,7 @@ data = data.sort_values('crash_date',ascending=True)
 
 # dashboard title
 st.title("Real-Time Data Science Dashboard")
-image3 = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Data-Science-1.jpg')
+image3 = Image.open('/images/Data-Science-1.jpg')
 st.image(image3, caption='')
 
 st.title("¿Cómo generar políticas públicas data-driven para reducir la siniestralidad en este nuevo contexto? ")
@@ -313,7 +310,7 @@ st.markdown("Con las siguientes herramientas, será posible dimensionar la canti
 
 start_date = st.date_input("Seleccionar fecha de inicio",min_value = datetime.date(2012, 8, 26), max_value= datetime.date.today(), value=datetime.date.today())
 end_date = st.date_input("Seleccionar último dia de análisis",min_value = datetime.date(2012, 8, 26), max_value= datetime.date.today(), value=datetime.date.today()) #ver si esta actualizando siempre!
-filter=data.copy() #voy a hacer un campo de tipo de fecha para poder hacer la mascara, prefiero hacerlo con copia
+filter=df3.copy() #voy a hacer un campo de tipo de fecha para poder hacer la mascara, prefiero hacerlo con copia
 filter['crash_date']=filter['crash_date'].dt.date
 filter=filter[(filter['crash_date']>= (start_date)) & (filter['crash_date']<=(end_date))]
 
@@ -365,7 +362,7 @@ if calculo:
     
     
     st.metric("Accidentes menos por dia", value=round((accidentes*porcentaje/100)/dias,2), delta= f'-{porcentaje}%' )
-image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Conclusiones_Iniciales_NYC.png')
+image = Image.open('/images/Conclusiones_NYC.png')
 
 
 
@@ -381,16 +378,16 @@ def between_date(data,start,end):
     mask = (data['crash_date'] >= start) & (data['crash_date'] <= end)
     return data.loc[mask]
 
-dates = pd.to_datetime(df['crash_date'])
+dates = pd.to_datetime(df3['crash_date'])
 date_selection = st.sidebar.slider('Fecha:',
                             min_value= dates.max().date(),  
                             max_value= dates.max().date(),
                             value=(dates.min().date(),dates.max().date()))
-df = between_date(df,str(date_selection[0]),str(date_selection[1]))
+df3 = between_date(df3,str(date_selection[0]),str(date_selection[1]))
 
 #FEATURES
 st.subheader("Feature")
-options = df.drop(columns=(['latitude','longitude','crash_date'])).columns.to_list()
+options = df3.drop(columns=(['latitude','longitude','crash_date'])).columns.to_list()
 map_selection = st.selectbox(label= 'Seleccionar datos de:',options=options)
 
 if map_selection == 'total_killed':
@@ -403,13 +400,13 @@ else:
 #GRAVEDAD
 gravedad = st.sidebar.slider('Gravedad:',
                             min_value = min_value,
-                            max_value = float(df[map_selection].max()),
-                            value=(min_value,float(df[map_selection].max())))
-df = df[(df[map_selection] >= gravedad[0]) & (df[map_selection] <= gravedad[1])]
+                            max_value = float(df3[map_selection].max()),
+                            value=(min_value,float(df3[map_selection].max())))
+df3 = df3[(df3[map_selection] >= gravedad[0]) & (df3[map_selection] <= gravedad[1])]
 
 column_layer = pdk.Layer(
     "ColumnLayer",
-    data=df,
+    data=df3,
     get_position=["longitude", "latitude"],
     get_elevation=f"{map_selection}*10",
     elevation_scale=elevation_scale,
@@ -438,11 +435,12 @@ r = pdk.Deck(
 
 st.pydeck_chart(r)
 
-image = Image.open('/content/drive/MyDrive/Colab Notebooks/images/Conclusiones_Iniciales_NYC.png')
+image = Image.open('/images/Conclusiones_NYC.png')
 st.image(image) 
 
 st.subheader( '- La pandemia tuvo como resultado colateral una significativa caída en los accidentes de tránsito. La caída post-Lockdown es generada por menos personas movilizándose, tanto los días de semana como los sábados y domingos.')
 st.subheader( '- Aunque se observaba mayor siniestralidad en verano, y los días viernes, esto ya no se observa en la actualidad. El manejo "DUI" no es de los principales causantes de accidentes. Sin embargo, identificamos a las distracciones (no determinadas) como uno de los principales motivos de colisiones entre vehículos.')
+st.subheader( '- El control en el "Exceso de velocidad", ')
 st.subheader( '- El impacto económico por la siniestralidad vial toma valores multimillonarios y afecta a cientos de personas cada año. La posibilidad de visualizar las esquinas con mayor cantidad de accidentes permite identificar áreas de mayor riesgo para destinar políticas públicas de mayor impacto.')
 st.subheader( '- Identificamos áreas de interés, por ejemplo la esquina de Vanderbilt Ave y Bay St. donde se encuentra uno de los principales hospitales de Long Island, junto a una escuela y un edificio del Servicio Postal o los alrededores de Bedfort Ave y Lincoln Rd. en Brooklyn, junto a uno de los principales hospitales de emergencias, el Kings County Hospital')
 st.subheader( '- Finalmente, al analizar otra linea de investigación relacionada a fechas de eventos deportivos,  nos lleva a proponer mayores controles en los alredores del Estadio de los "NY Yankees" (Bronx), al observarse un aumento en el promedio de accidentes durante esos días.')
