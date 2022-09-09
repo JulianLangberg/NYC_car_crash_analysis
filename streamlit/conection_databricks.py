@@ -9,8 +9,10 @@ def tabla(db,tabla):
     cursor = connection.cursor()
     cursor.execute(f"SELECT * FROM {db}.{tabla}")
     result = cursor.fetchall()
-    df = pd.DataFrame(result)
+    columns = cursor.description
+    field_names = [i[0] for i in columns]
+    df = pd.DataFrame(result, columns=field_names)
     cursor.close()
     connection.close()
-    return df
+    return df 
     

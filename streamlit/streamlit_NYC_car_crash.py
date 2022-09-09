@@ -34,7 +34,7 @@ mod1 = st.container()
 
 @st.cache
 def load_data():
-    df3 = tabla('gold','general_graph')
+    df3 = tabla('gold','ny_city_data')
     df_semana_siniestros = tabla('gold','day_of_week')
     df_motivos_grouped_aux_pre = tabla('gold','df_motivos_grouped_aux_pre')
     df_motivos_grouped_aux_post =  tabla('gold','df_motivos_grouped_aux_post')
@@ -50,9 +50,9 @@ df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_po
 
 with header1:
     st.title("Siniestralidad vial en NYC: análisis descriptivo y su impacto en la economía")
-    image = Image.open('portada_nyc_car_crash.jpg')
+    image = Image.open('portada_nyc_car_crash1.jpg')
 
-    st.image(image, caption='NYC - Car crash') 
+    st.image(image) 
 
 
     st.markdown("En la presente investigación se utilizará información oficial sobre siniestralidad vial recolectada desde https://opendata.cityofnewyork.us/, información climatológica del National Centers for Environmental Information en https://www.ncei.noaa.gov/, y los costos económicos generados surgen de investigaciones presentadas por el National Safety Counsil en https://injuryfacts.nsc.org/ ")
