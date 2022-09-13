@@ -32,35 +32,6 @@ mod1 = st.container()
 #df3 = pd.read_csv(file)
 #  return df3
 
-#@st.cache
-#def load_data():
-#    df3 = tabla('gold','ny_city_data')
-#    df_semana_siniestros = tabla('gold','day_of_week')
-#    df_motivos_grouped_aux_pre = tabla('gold','df_motivos_grouped_aux_pre')
-#    df_motivos_grouped_aux_post =  tabla('gold','df_motivos_grouped_aux_post')
-#    df_motivos_grouped_aux_post_viernes = tabla('gold','df_motivos_grouped_aux_post_viernes')
-#    df_motivos_grouped_post_winter = tabla('gold','df_motivos_grouped_post_winter')
-#    #df = df3
-#    return df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter
-
-df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter = load_data()
-## cargar df3 sdfsdf
-
-
-@st.cache
-def load_data():
-    df3 = pd.read_csv('general_graph.csv').drop(columns='Unnamed: 0')
-    df_semana_siniestros = pd.read_csv('df_semana_siniestros.csv').drop(columns='Unnamed: 0')
-    df_motivos_grouped_aux_pre = pd.read_csv('df_motivos_grouped_aux_pre.csv').drop(columns='Unnamed: 0')
-    df_motivos_grouped_aux_post =  pd.read_csv('df_motivos_grouped_aux_post.csv').drop(columns='Unnamed: 0')
-    df_motivos_grouped_aux_post_viernes = pd.read_csv('df_motivos_grouped_aux_post_viernes.csv').drop(columns='Unnamed: 0')
-    df_motivos_grouped_post_winter = pd.read_csv('df_motivos_grouped_post_winter.csv').drop(columns='Unnamed: 0')
-    #df = df3
-    return df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter
-
-df3, df_semana_siniestros, df_motivos_grouped_aux_pre, df_motivos_grouped_aux_post, df_motivos_grouped_aux_post_viernes, df_motivos_grouped_post_winter = load_data()
-
-###########  VISUAL, PRESENTACION EQUIPO
 
 with header1:
     st.title("Siniestralidad vial en NYC: análisis descriptivo y su impacto en la economía")
